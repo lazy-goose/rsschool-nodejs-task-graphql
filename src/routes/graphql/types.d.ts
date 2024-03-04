@@ -1,10 +1,14 @@
 import { PrismaClient } from '@prisma/client';
 import { UUID as CryptoUUID } from 'crypto';
+import { MemberTypeId } from '../member-types/schemas.ts';
+import { createLoaders } from './createLoaders.ts';
 
 export type UUID = CryptoUUID;
 
-export type Member = {
-  id: UUID;
+export type MemberTypeId = `${MemberTypeId}`;
+
+export type MemberType = {
+  id: MemberTypeId;
   discount: number;
   postsLimitPerMonth: number;
 };
@@ -13,15 +17,15 @@ export type Post = {
   id: UUID;
   title: string;
   content: string;
-  authorId: string;
+  authorId: UUID;
 };
 
 export type Profile = {
   id: UUID;
   isMale: boolean;
   yearOfBirth: number;
-  userId: string;
-  memberTypeId: string;
+  userId: UUID;
+  memberTypeId: UUID;
 };
 
 export type Subscribe = {
@@ -51,4 +55,5 @@ export type SubscribeUpdate = {
 
 export type GqlContext = {
   prisma: PrismaClient;
+  loaders: ReturnType<typeof createLoaders>;
 };
