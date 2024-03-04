@@ -1,11 +1,11 @@
 import {
-  GraphQLFieldConfig,
   GraphQLFloat,
+  GraphQLInputObjectType,
   GraphQLList,
   GraphQLObjectType,
   GraphQLString,
 } from 'graphql';
-import { GqlContext, UUID, User } from '../types.js';
+import { GqlContext, User } from '../types.js';
 import { PostType } from './Post.js';
 import { ProfileType } from './Profile.js';
 import { UUIDType } from './UUID.js';
@@ -65,25 +65,26 @@ export const UserType: GraphQLObjectType<User, GqlContext> = new GraphQLObjectTy
   }),
 });
 
-export const UserQueries = {
-  user: {
-    type: UserType,
-    args: {
-      id: {
-        type: UUIDType,
-      },
+export const CreateUserInputType = new GraphQLInputObjectType({
+  name: 'CreateUserInput',
+  fields: {
+    name: {
+      type: GraphQLString,
     },
-    async resolve(_, args, ctx) {
-      return ctx.prisma.user.findUnique({ where: { id: args.id } });
+    balance: {
+      type: GraphQLFloat,
     },
   },
-  users: {
-    type: new GraphQLList(UserType),
-    async resolve(_, __, ctx) {
-      return ctx.prisma.user.findMany();
+});
+
+export const ChangeUserInputType = new GraphQLInputObjectType({
+  name: 'ChangeUserInput',
+  fields: {
+    name: {
+      type: GraphQLString,
+    },
+    balance: {
+      type: GraphQLFloat,
     },
   },
-} satisfies {
-  user: GraphQLFieldConfig<void, GqlContext, { id: UUID }>;
-  users: GraphQLFieldConfig<void, GqlContext>;
-};
+});

@@ -1,10 +1,5 @@
-import {
-  GraphQLFieldConfig,
-  GraphQLList,
-  GraphQLObjectType,
-  GraphQLString,
-} from 'graphql';
-import { GqlContext, Post, UUID } from '../types.js';
+import { GraphQLInputObjectType, GraphQLObjectType, GraphQLString } from 'graphql';
+import { GqlContext, Post } from '../types.js';
 import { UUIDType } from './UUID.js';
 
 export const PostType: GraphQLObjectType<Post, GqlContext> = new GraphQLObjectType({
@@ -25,25 +20,29 @@ export const PostType: GraphQLObjectType<Post, GqlContext> = new GraphQLObjectTy
   }),
 });
 
-export const PostQueries = {
-  post: {
-    type: PostType,
-    args: {
-      id: {
-        type: UUIDType,
-      },
+export const CreatePostInputType = new GraphQLInputObjectType({
+  name: 'CreatePostInput',
+  fields: {
+    title: {
+      type: GraphQLString,
     },
-    async resolve(_, args, ctx) {
-      return ctx.prisma.post.findUnique({ where: { id: args.id } });
+    content: {
+      type: GraphQLString,
     },
-  },
-  posts: {
-    type: new GraphQLList(PostType),
-    async resolve(_, __, ctx) {
-      return ctx.prisma.post.findMany();
+    authorId: {
+      type: UUIDType,
     },
   },
-} satisfies {
-  post: GraphQLFieldConfig<void, GqlContext, { id: UUID }>;
-  posts: GraphQLFieldConfig<void, GqlContext>;
-};
+});
+
+export const ChangePostInputType = new GraphQLInputObjectType({
+  name: 'ChangePostInput',
+  fields: {
+    title: {
+      type: GraphQLString,
+    },
+    content: {
+      type: GraphQLString,
+    },
+  },
+});

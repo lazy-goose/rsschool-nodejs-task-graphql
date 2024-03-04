@@ -4,20 +4,20 @@ import { UUID as CryptoUUID } from 'crypto';
 export type UUID = CryptoUUID;
 
 export type Member = {
-  id: string;
+  id: UUID;
   discount: number;
   postsLimitPerMonth: number;
 };
 
 export type Post = {
-  id: string;
+  id: UUID;
   title: string;
   content: string;
   authorId: string;
 };
 
 export type Profile = {
-  id: string;
+  id: UUID;
   isMale: boolean;
   yearOfBirth: number;
   userId: string;
@@ -25,16 +25,26 @@ export type Profile = {
 };
 
 export type Subscribe = {
-  subscriberId: string;
-  authorId: string;
+  subscriberId: UUID;
+  authorId: UUID;
 };
 
 export type User = {
-  id: string;
+  id: UUID;
   name: string;
   balance: number;
   userSubscribedTo?: Subscribe[];
   subscribedToUser?: Subscribe[];
+};
+
+export type UserUpdate = {
+  name: string;
+  balance: number;
+};
+
+export type SubscribeUpdate = {
+  userId: UUID;
+  authorId: UUID;
 };
 
 /* Graphql specific */

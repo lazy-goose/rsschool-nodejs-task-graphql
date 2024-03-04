@@ -1,14 +1,14 @@
 import { Profile } from '@prisma/client';
 import {
   GraphQLBoolean,
-  GraphQLFieldConfig,
+  GraphQLInputObjectType,
   GraphQLInt,
-  GraphQLList,
   GraphQLObjectType,
   GraphQLString,
 } from 'graphql';
-import { GqlContext, UUID } from '../types.js';
+import { GqlContext } from '../types.js';
 import { MemberType } from './MemberType.js';
+import { MemberTypeId } from './MemberTypeId.js';
 import { UUIDType } from './UUID.js';
 import { UserType } from './User.js';
 
@@ -24,11 +24,11 @@ export const ProfileType: GraphQLObjectType<Profile, GqlContext> = new GraphQLOb
     yearOfBirth: {
       type: GraphQLInt,
     },
-    userId: {
-      type: UUIDType,
-    },
     memberTypeId: {
       type: GraphQLString,
+    },
+    userId: {
+      type: UUIDType,
     },
     user: {
       type: UserType,
@@ -45,25 +45,35 @@ export const ProfileType: GraphQLObjectType<Profile, GqlContext> = new GraphQLOb
   }),
 });
 
-export const ProfileQueries = {
-  profile: {
-    type: ProfileType,
-    args: {
-      id: {
-        type: UUIDType,
-      },
+export const CreateProfileInputType = new GraphQLInputObjectType({
+  name: 'CreateProfileInput',
+  fields: {
+    isMale: {
+      type: GraphQLBoolean,
     },
-    async resolve(_, args, ctx) {
-      return ctx.prisma.profile.findUnique({ where: { id: args.id } });
+    yearOfBirth: {
+      type: GraphQLInt,
     },
-  },
-  profiles: {
-    type: new GraphQLList(ProfileType),
-    async resolve(_, __, ctx) {
-      return ctx.prisma.profile.findMany();
+    memberTypeId: {
+      type: GraphQLString,
+    },
+    userId: {
+      type: UUIDType,
     },
   },
-} satisfies {
-  profile: GraphQLFieldConfig<void, GqlContext, { id: UUID }>;
-  profiles: GraphQLFieldConfig<void, GqlContext>;
-};
+});
+
+export const ChangeProfileInputType = new GraphQLInputObjectType({
+  name: 'ChangeProfileInput',
+  fields: {
+    isMale: {
+      type: GraphQLBoolean,
+    },
+    yearOfBirth: {
+      type: GraphQLInt,
+    },
+    memberTypeId: {
+      type: MemberTypeId,
+    },
+  },
+});
