@@ -1,5 +1,12 @@
 import { GraphQLBoolean, GraphQLFieldConfig } from 'graphql';
-import { GqlContext, Post, Profile, SubscribeUpdate, UUID, UserUpdate } from './types.js';
+import {
+  GqlContext,
+  Post,
+  Profile,
+  SubscriptionUpdate,
+  UUID,
+  UserUpdate,
+} from './types.js';
 import { ChangePostInputType, CreatePostInputType, PostType } from './types/Post.js';
 import {
   ChangeProfileInputType,
@@ -199,6 +206,6 @@ export const SubscribeMutations = {
     },
   },
 } satisfies {
-  subscribeTo: GraphQLFieldConfig<void, GqlContext, SubscribeUpdate>;
-  unsubscribeFrom: GraphQLFieldConfig<void, GqlContext, SubscribeUpdate>;
+  subscribeTo: GraphQLFieldConfig<void, GqlContext, SubscriptionUpdate>;
+  unsubscribeFrom: GraphQLFieldConfig<void, GqlContext, SubscriptionUpdate>;
 };

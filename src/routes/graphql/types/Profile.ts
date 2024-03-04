@@ -1,4 +1,3 @@
-import { Profile } from '@prisma/client';
 import {
   GraphQLBoolean,
   GraphQLInputObjectType,
@@ -6,8 +5,8 @@ import {
   GraphQLObjectType,
   GraphQLString,
 } from 'graphql';
-import { GqlContext } from '../types.js';
-import { MemberType } from './MemberType.js';
+import { GqlContext, Profile } from '../types.js';
+import { MemberTypeType } from './MemberType.js';
 import { MemberTypeId } from './MemberTypeId.js';
 import { UUIDType } from './UUID.js';
 import { UserType } from './User.js';
@@ -33,13 +32,13 @@ export const ProfileType: GraphQLObjectType<Profile, GqlContext> = new GraphQLOb
     user: {
       type: UserType,
       async resolve(src, _, ctx) {
-        return ctx.prisma.user.findUnique({ where: { id: src.userId } });
+        return ctx.loaders.userById.load(src.userId);
       },
     },
     memberType: {
-      type: MemberType,
+      type: MemberTypeType,
       async resolve(src, _, ctx) {
-        return ctx.prisma.memberType.findUnique({ where: { id: src.memberTypeId } });
+        return ctx.loaders.memberTypeById.load(src.memberTypeId);
       },
     },
   }),

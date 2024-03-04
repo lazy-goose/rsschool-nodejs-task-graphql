@@ -28,7 +28,7 @@ export type Profile = {
   memberTypeId: UUID;
 };
 
-export type Subscribe = {
+export type Subscription = {
   subscriberId: UUID;
   authorId: UUID;
 };
@@ -37,8 +37,13 @@ export type User = {
   id: UUID;
   name: string;
   balance: number;
-  userSubscribedTo?: Subscribe[];
-  subscribedToUser?: Subscribe[];
+  userSubscribedTo?: Subscription[];
+  subscribedToUser?: Subscription[];
+};
+
+export type SubscriptionUpdate = {
+  userId: UUID;
+  authorId: UUID;
 };
 
 export type UserUpdate = {
@@ -46,10 +51,6 @@ export type UserUpdate = {
   balance: number;
 };
 
-export type SubscribeUpdate = {
-  userId: UUID;
-  authorId: UUID;
-};
 
 /* Graphql specific */
 

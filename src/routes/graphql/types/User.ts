@@ -25,41 +25,27 @@ export const UserType: GraphQLObjectType<User, GqlContext> = new GraphQLObjectTy
     profile: {
       type: ProfileType,
       async resolve(src, _, ctx) {
-        return ctx.prisma.profile.findUnique({ where: { userId: src.id } });
+        return ctx.loaders.profileByUserId.load(src.id);
       },
     },
     posts: {
       type: new GraphQLList(PostType),
       async resolve(src, _, ctx) {
-        return ctx.prisma.post.findMany({ where: { authorId: src.id } });
+        return ctx.loaders.postsByAuthorId.load(src.id);
       },
     },
     userSubscribedTo: {
       type: new GraphQLList(UserType),
       async resolve(src, _, ctx) {
-        const results = await ctx.prisma.subscribersOnAuthors.findMany({
-          where: {
-            subscriberId: src.id,
-          },
-          select: {
-            author: true,
-          },
-        });
-        return results.map((result) => result.author);
+        const userSubs = src.userSubscribedTo || [];
+        return ctx.loaders.userById.loadMany(userSubs.map((s) => s.authorId));
       },
     },
     subscribedToUser: {
       type: new GraphQLList(UserType),
       async resolve(src, _, ctx) {
-        const results = await ctx.prisma.subscribersOnAuthors.findMany({
-          where: {
-            authorId: src.id,
-          },
-          select: {
-            subscriber: true,
-          },
-        });
-        return results.map((result) => result.subscriber);
+        const subsToUser = src.subscribedToUser || [];
+        return ctx.loaders.userById.loadMany(subsToUser.map((s) => s.subscriberId));
       },
     },
   }),
